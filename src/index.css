@@ -1,0 +1,16 @@
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+
+}
+ /**debug
+.window {
+  outline: 2px solid red;
+}**/
+.no-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Modern browsers */
+}
