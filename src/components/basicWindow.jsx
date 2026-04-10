@@ -6,8 +6,8 @@ function BasicWindow({
 
     title = "Window",
     children,
-    defaultPosition = { x: 100, y: 100 },
-    defaultSize = { width: 400, height: "auto" },
+    defaultPosition = { x: 100, y: 200 },
+    defaultSize = { width: 400, height: 300 },
     onClose,
     onFocus,
     style
@@ -27,7 +27,13 @@ function BasicWindow({
         height: defaultSize.height,
       }}
     >
-      <div className="window glass active" style={{ width: "100%" }}>
+      <div className="window glass active" 
+          style={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}>
         {/* Title Bar */}
         <div className="title-bar">
           <div className="title-bar-text no-select">{title}</div>
@@ -39,7 +45,12 @@ function BasicWindow({
         </div>
 
         {/* Body */}
-        <div className="window-body no-select">
+        <div className="window-body no-select"
+          style={{
+            flex: 1,
+            overflow: "hidden",
+            display: "flex",
+          }}>
           {children}
         </div>
       </div>

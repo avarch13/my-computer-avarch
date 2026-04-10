@@ -1,15 +1,8 @@
-import { useState } from "react";
 import "7.css/dist/7.css";
 import '../index.css'
 import { Rnd } from "react-rnd";
 
 function BackgroundWindow({ openWindow }) {
-
-    const [windows, setWindows] = useState({
-        open: false,
-        save: false,
-    });
-
 
     const styleText = {
         WebkitUserSelect: 'none',
@@ -18,8 +11,6 @@ function BackgroundWindow({ openWindow }) {
     };
 
     
-
-
     return (
         <Rnd
         bounds="window"
@@ -80,7 +71,7 @@ function BackgroundWindow({ openWindow }) {
                             <li role="menuitem" tabIndex="0" aria-haspopup="true">
                                 Somewhere
                                 <ul role="menu">
-                                <li role="menuitem"><button>There's a place you can be happy</button></li>
+                                <li role="menuitem"><button onClick={() => openWindow("memories", "Memories", { type: "gallery"})}>Memories</button></li>
                                 <li role="menuitem"><button>The world has failed you</button></li>
                                 </ul>
                             </li>
@@ -99,8 +90,12 @@ function BackgroundWindow({ openWindow }) {
             </div>
                 <div class="status-bar">
                     <p class="status-bar-field">Press F1 for help</p>
-                    <p class="status-bar-field">Slide 1</p>
-                    <p class="status-bar-field">CPU Usage: 14%</p>
+                    <div class="status-bar-field">
+                        <div role="progressbar" class="animate">
+                            <div style={{width: "34%"}}></div>
+                        </div>
+                    </div>
+                    <text class="status-bar-field" style={{ textAligh: "right"}}>Site em Construção</text>
                 </div>
         </div>
         </Rnd>
