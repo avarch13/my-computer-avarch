@@ -1,59 +1,59 @@
 import { useEffect, useState } from "react";
 
-function BackgroundImageComponent({ activeWindowId, backgroundMap, defaultBg }) {
-  const [currentBg, setCurrentBg] = useState(defaultBg);
+function BackgroundImageComponent({ activeWindowCategory, backgroundModifier, backgroundMap, defaultBg }) {
+  const [currentBg, setCurrentBg] = useState({ src: defaultBg, repeat: false });
   const [nextBg, setNextBg] = useState(null);
   const [visible, setVisible] = useState(false);
 
-  const newBg = backgroundMap?.[activeWindowId] ?? defaultBg;
+  const categoryEntry = backgroundMap?.[activeWindowCategory];
+  const selectedBg = typeof categoryEntry === "object"
+    ? categoryEntry?.[backgroundModifier] ?? categoryEntry?.default
+    : categoryEntry;
+
+  const effectiveBg = selectedBg ?? defaultBg;
 
   useEffect(() => {
-    if (!newBg || newBg === currentBg) return;
+    if (!effectiveBg || effectiveBg === currentBg.src) return;
 
     const img = new Image();
-    img.src = newBg;
+    img.src = effectiveBg;
 
     img.onload = () => {
-      setNextBg(newBg);
-      setVisible(false); // start hidden
+      const shouldRepeat = img.width < 200 || img.height < 200;
+      setNextBg({ src: effectiveBg, repeat: shouldRepeat });
+      setVisible(false);
 
-      // force next frame so transition can occur
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          setVisible(true); // triggers fade
+          setVisible(true);
         });
       });
 
       setTimeout(() => {
-        setCurrentBg(newBg);
+        setCurrentBg({ src: effectiveBg, repeat: shouldRepeat });
         setNextBg(null);
         setVisible(false);
       }, 600);
     };
-  }, [newBg, currentBg]);
+  }, [effectiveBg, currentBg.src]);
+
+  const getBgStyle = (bg) => ({
+    position: "absolute",
+    inset: 0,
+    backgroundImage: `url(${bg.src})`,
+    backgroundSize: bg.repeat ? "auto" : "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: bg.repeat ? "repeat" : "no-repeat",
+  });
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 0 }}>
-      {/* Current */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `url(${currentBg})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+      <div style={getBgStyle(currentBg)} />
 
-      {/* Next (fades in) */}
       {nextBg && (
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: `url(${nextBg})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
+            ...getBgStyle(nextBg),
             opacity: visible ? 1 : 0,
             transition: "opacity 1s ease",
           }}
